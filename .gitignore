@@ -1,0 +1,19 @@
+# Build files
+/build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Executables
+trading_app
+
+# VS Code configs (optional)
+.vscode/
+
+# macOS junk
+.DS_Store
+
+# Crow or other external folders (if you downloaded them separately)
+Crow-master/
+crow.zip

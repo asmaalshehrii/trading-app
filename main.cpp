@@ -94,8 +94,30 @@ void simulateOrders() {
     }
 }
 
+struct CORS {
+    struct context {}; // required by Crow's middleware system
+
+    void before_handle(crow::request& req, crow::response& res, context&) {
+        res.add_header("Access-Control-Allow-Origin", "*");
+        res.add_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        res.add_header("Access-Control-Allow-Headers", "Content-Type");
+
+        if (req.method == crow::HTTPMethod::Options) {
+            res.code = 204; // No Content
+            res.end();
+        }
+    }
+
+    void after_handle(crow::request&, crow::response& res, context&) {
+        // Optional: Add additional headers here
+    }
+};
+
+
+
 int main() {
-    crow::SimpleApp app;
+    crow::App<CORS> app;
+
 
     // Start background simulation thread
     std::thread(simulateOrders).detach();
@@ -140,6 +162,31 @@ int main() {
         auto res = matchOrders(ticker);
         return crow::response(res);
     });
+
+    // POST /addRandomOrders
+CROW_ROUTE(app, "/addRandomOrders").methods("POST"_method)([] {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> ticker_dist(0, MAX_TICKERS - 1);
+    std::uniform_int_distribution<> price_dist(90, 110);
+    std::uniform_int_distribution<> qty_dist(1, 10);
+    std::uniform_int_distribution<> type_dist(0, 1);
+
+    // Generate 100 random orders
+    for (int i = 0; i < 100; ++i) {
+        int ticker = ticker_dist(gen);
+        int price = price_dist(gen);
+        int quantity = qty_dist(gen);
+        bool isBuy = type_dist(gen);
+
+        addOrder(isBuy, ticker, quantity, price);
+    }
+
+    crow::json::wvalue res;
+    res["status"] = "100 random orders added";
+    return crow::response(res);
+});
+
 
     app.port(18080).multithreaded().run();
 }

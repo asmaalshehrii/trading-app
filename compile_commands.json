@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/Users/samhassan/trading-app/build",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -I/Users/samhassan/trading-app/include -I/opt/homebrew/include -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.0.sdk -o CMakeFiles/trading_app.dir/main.cpp.o -c /Users/samhassan/trading-app/main.cpp",
-  "file": "/Users/samhassan/trading-app/main.cpp",
-  "output": "CMakeFiles/trading_app.dir/main.cpp.o"
-}
-]
